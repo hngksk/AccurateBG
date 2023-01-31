@@ -36,7 +36,11 @@ def timegan(ori_data, parameters):
       - generated_data: generated time-series data
     """
     # Initialization on the Graph
+    import tensorflow.compat.v1 as tf
+    tf.disable_v2_behavior()
+
     tf.reset_default_graph()
+    # tf.compat.v1.get_default_graph()
 
     # Basic Parameters
     no, seq_len, dim = np.asarray(ori_data).shape
@@ -94,6 +98,7 @@ def timegan(ori_data, parameters):
         """
         with tf.variable_scope("embedder", reuse=tf.AUTO_REUSE):
             e_cell = tf.nn.rnn_cell.MultiRNNCell(
+            # e_cell = tf.compat.v1.nn.rnn_cell.MultiRNNCell(
                 [rnn_cell(module_name, hidden_dim) for _ in range(num_layers)]
             )
             e_outputs, e_last_states = tf.nn.dynamic_rnn(
